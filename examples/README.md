@@ -27,7 +27,7 @@ m2j2Err: Error: Expecting an object with a field named `bletch` but instead got:
 ```
 The two functions in the `VersionedJson` module, `encodeVersionedJson` and `decodeVersionedJson` are meant to be usable at the beginning of a project, or at some time after you have already built JSON encoders and decoders for your state.
 
-[example.json](example.json) contains three different models, `Model0`, `Model1`, and `Model2`, which are designed to represent a possible extension of an application model over time.
+[example.elm](example.elm) contains three different models, `Model0`, `Model1`, and `Model2`, which are designed to represent a possible extension of an application model over time.
 
 `encodeN` encodes a `ModelN` instance into a `String`, in the natural way for record types:
 
