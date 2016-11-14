@@ -1,6 +1,8 @@
 module VersionedJson exposing (ConverterDict, encodeVersionedJson, decodeVersionedJson)
 
-{-| A couple of functions to ease versioning of your Json representations.
+{-| A couple of functions to ease versioning of your JSON representations.
+
+See the README for the [examples](https://github.com/billstclair/elm-versioned-json/tree/master/examples) directory for details.
 
 # Classes
 @docs ConverterDict
