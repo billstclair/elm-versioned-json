@@ -181,7 +181,7 @@ decode2 json =
 
 Sometimes your model will change such that you can't build a decoder on the previous version. You'll have to deal with that. Or, better, try to only grow your models in ways that make it possible.
 
-Every time you move to a new model, you need to build a converter from each previousmodel to the new one. So to move from `Model0` to `Model1`:
+Every time you move to a new model, you need to build a converter from each previous model to the new one. So to move from `Model0` to `Model1`:
 
 ```
 model0To1 : Model0 -> Model1
@@ -202,7 +202,7 @@ model1To2 model =
   }
 ```
 
-Note that we have to provide a default value for the new state missing in the old model.
+You have to provide a default value for the new state missing in the old model.
 
 Finally, we can make converters that take old JSON representations and turn them into new models. For the `Model0` to `Model1` conversion, that is:
 
@@ -233,7 +233,7 @@ model1StringToModel2 json =
       Ok (model1To2 model1)
 ```
 
-Note that for `ModelN` you need to write N upgrade functions, but they can largely be built from earlier upgrade functions that you've written before.
+For `ModelN` you need to write N upgrade functions, but they can largely be built from earlier upgrade functions that you've written before.
 
 Finally, we can create the conversion dictionaries, for passing to `decodeVersionedJson`. This one converts JSON for `Model0` or `Model1` to `Model1`:
 
