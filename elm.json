@@ -3,7 +3,7 @@
     "name": "billstclair/elm-versioned-json",
     "summary": "Help with versioned JSON representations.",
     "license": "MIT",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "exposed-modules": [
         "VersionedJson"
     ],
