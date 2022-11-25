@@ -1,24 +1,25 @@
 module Main exposing (..)
 
-import VersionedJson exposing (ConverterDict, encodeVersionedJson, decodeVersionedJson)
+import Browser
+import Dict
 import Html
     exposing
-        ( Html
-        , Attribute
+        ( Attribute
+        , Html
         , table
-        , tr
         , td
         , text
+        , tr
         )
 import Html.Attributes exposing (style)
-import Json.Decode as JD exposing (field, Decoder)
+import Json.Decode as JD exposing (Decoder, field)
 import Json.Encode as JE
-import Dict
+import VersionedJson exposing (ConverterDict, decodeVersionedJson, encodeVersionedJson)
 
 
 main =
-    Html.program
-        { init = init
+    Browser.element
+        { init = \() -> init
         , view = view
         , update = update
         , subscriptions = subscriptions
@@ -42,7 +43,7 @@ encode0 model =
 
 propDecoder : String -> Decoder x -> Decoder x
 propDecoder prop decoder =
-    (field prop decoder)
+    field prop decoder
 
 
 fooDecoder : Decoder Int
@@ -64,7 +65,7 @@ decode0 : String -> Result String Model0
 decode0 json =
     case JD.decodeString fooDecoder json of
         Err s ->
-            Err s
+            Err <| JD.errorToString s
 
         Ok foo ->
             Ok { foo = foo }
@@ -95,14 +96,14 @@ decode1 json =
         Err s ->
             Err s
 
-        Ok model0 ->
+        Ok mdl ->
             case JD.decodeString barDecoder json of
                 Err s2 ->
-                    Err s2
+                    Err <| JD.errorToString s2
 
                 Ok bar ->
                     Ok
-                        { foo = model0.foo
+                        { foo = mdl.foo
                         , bar = bar
                         }
 
@@ -119,7 +120,7 @@ encoder2 model =
     JE.object
         [ ( "foo", JE.int model.foo )
         , ( "bar", JE.string model.bar )
-        , ( "bletch", JE.list (List.map JE.int model.bletch) )
+        , ( "bletch", JE.list JE.int model.bletch )
         ]
 
 
@@ -134,15 +135,15 @@ decode2 json =
         Err s ->
             Err s
 
-        Ok model1 ->
+        Ok mdl ->
             case JD.decodeString bletchDecoder json of
                 Err s2 ->
-                    Err s2
+                    Err <| JD.errorToString s2
 
                 Ok bletch ->
                     Ok
-                        { foo = model1.foo
-                        , bar = model1.bar
+                        { foo = mdl.foo
+                        , bar = mdl.bar
                         , bletch = bletch
                         }
 
@@ -199,8 +200,8 @@ model0StringToModel1 json =
         Err s ->
             Err s
 
-        Ok model0 ->
-            Ok (model0To1 model0)
+        Ok mdl ->
+            Ok (model0To1 mdl)
 
 
 model0StringToModel2 : String -> Result String Model2
@@ -209,8 +210,8 @@ model0StringToModel2 json =
         Err s ->
             Err s
 
-        Ok model1 ->
-            Ok (model1To2 model1)
+        Ok mdl ->
+            Ok (model1To2 mdl)
 
 
 model1StringToModel2 : String -> Result String Model2
@@ -219,8 +220,8 @@ model1StringToModel2 json =
         Err s ->
             Err s
 
-        Ok model1 ->
-            Ok (model1To2 model1)
+        Ok mdl ->
+            Ok (model1To2 mdl)
 
 
 json0 : String
@@ -307,7 +308,7 @@ tos res =
             "Error: " ++ s
 
         Ok x ->
-            toString x
+            Debug.toString x
 
 
 mjStrings =

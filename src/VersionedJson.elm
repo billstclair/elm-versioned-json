@@ -1,14 +1,22 @@
-module VersionedJson exposing (ConverterDict, encodeVersionedJson, decodeVersionedJson)
+module VersionedJson exposing
+    ( ConverterDict
+    , encodeVersionedJson, decodeVersionedJson
+    )
 
 {-| A couple of functions to ease versioning of your JSON representations.
 
 See the README for the [examples](https://github.com/billstclair/elm-versioned-json/tree/master/examples) directory for details.
 
+
 # Classes
+
 @docs ConverterDict
 
+
 # Functions
+
 @docs encodeVersionedJson, decodeVersionedJson
+
 -}
 
 import Dict exposing (Dict)
@@ -26,7 +34,7 @@ encodeVersionedJson version value encoder =
             , ( "value", JE.string <| encoder value )
             ]
     in
-        JE.encode 0 <| JE.object plist
+    JE.encode 0 <| JE.object plist
 
 
 {-| An Elm Dict mapping version numbers to decoder functions
@@ -37,15 +45,17 @@ type alias ConverterDict x =
 
 versionAndValue : JD.Decoder ( Int, String )
 versionAndValue =
-    JD.map2 (,)
+    JD.map2 (\a b -> ( a, b ))
         (field "version" JD.int)
         (field "value" JD.string)
+
 
 {-| Decode a string saved by `encodeVersionedJson` with the relavant converter function
 from a dictionary you provide.
 
 If the string is not as encoded by `encodeVersionedJson`, use the converter function
 for version 0.
+
 -}
 decodeVersionedJson : String -> ConverterDict x -> Result String x
 decodeVersionedJson json dict =
@@ -61,7 +71,7 @@ decodeVersionedJson json dict =
         Ok ( version, value ) ->
             case Dict.get version dict of
                 Nothing ->
-                    Err ("No converter for version " ++ toString (version))
+                    Err ("No converter for version " ++ String.fromInt version)
 
                 Just c ->
                     c value
